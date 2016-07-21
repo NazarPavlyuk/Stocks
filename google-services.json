@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "790557104962",
+    "firebase_url": "https://new-trade.firebaseio.com",
+    "project_id": "new-trade",
+    "storage_bucket": "new-trade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790557104962:android:41b57b2b3efaae26",
+        "android_client_info": {
+          "package_name": "com.mybringback.thebasics.trade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790557104962-gtivmflhapghlthopp32f3e2a8nhm9ff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHhNbcVZr1Uq4RvRJ68jC3WN2CuttvQIM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
