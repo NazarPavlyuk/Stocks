@@ -26,4 +26,6 @@
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
     <string name="action_sign_out">Sign out</string>
+    <string name="app_label">Trade</string>
+    <string name="search_hint">Looking for stock symbols</string>
 </resources>

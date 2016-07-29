@@ -1,14 +1,39 @@
 package com.mybringback.thebasics.trade.model;
 
-import java.util.ArrayList;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-/**
- * Created by ALLO on 21.07.2016.
- */
-public class Dataset {
+public class Dataset  {
 
-    private List<List<String>> data = new ArrayList<List<String>>();
+
+    private List<List<String>> data;
+    /*private DataModel dataModel;*/
+    /*private String date;
+    private String value;*/
+    private String dataset_code;
+    /*private String date = data.get(0).get(0);
+    private String value =  data.get(0).get(1);*/
+    /*private String date = dataModel.getDate();
+    private String value = dataModel.getValue();*/
+
+    /*public Dataset () {
+        date = data.get(0).get(0);
+        value =  data.get(0).get(1);
+    }*/
+
+
+
+
+    public String getDataset_code() {
+        return dataset_code;
+    }
+
+    public void setDataset_code(String dataset_code) {
+        this.dataset_code = dataset_code;
+    }
 
     public List<List<String>> getData() {
         return data;
@@ -18,10 +43,46 @@ public class Dataset {
         this.data = data;
     }
 
-    @Override
-    public String toString() {
-        return "Dataset{" +
-                "data:current date=" + data.get(0).get(0) +
-                '}';
+   /* public String getDate() {
+        return date;
     }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }*/
+
+
+
+    /*public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }*/
+    /*private void readFromParcel(Parcel in) {
+        this.dataset_code = in.readString();
+        value = in.readString(); NULLPOINTER HERE
+        date = in.readString();
+    }*/
+
 }
+
+
+

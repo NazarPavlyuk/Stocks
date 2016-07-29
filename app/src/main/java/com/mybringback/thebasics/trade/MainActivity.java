@@ -1,25 +1,47 @@
 package com.mybringback.thebasics.trade;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.mybringback.thebasics.trade.login.LoginActivity;
+import com.mybringback.thebasics.trade.model.Dataset;
+import com.mybringback.thebasics.trade.model.Main;
+import com.mybringback.thebasics.trade.recycler.RecyclerItemClickListener;
+import com.mybringback.thebasics.trade.recycler.StocksAdapter;
+import com.mybringback.thebasics.trade.search.HandleActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int REQUEST_EXAMPLE = 0;
     private FirebaseAuth mAuth;
+    Button button;
+    private List<Dataset> stocksDataListMain = new ArrayList<>();
+    public static Dataset result;
+    private RecyclerView recyclerView;
+    private StocksAdapter mAdapter;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +50,36 @@ public class MainActivity extends AppCompatActivity
 
         mAuth = LoginActivity.Singleton.instance();
 
+       /* button = (Button) findViewById(R.id.button);
+        final  TextView textView=(TextView) findViewById(R.id.textView2);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://www.quandl.com/api/v3/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                DataService service = retrofit.create(DataService.class);
+                final Call<Main> call =
+                        service.rowsOrder("10","desc");
+
+                call.enqueue(new Callback<Main>() {
+                    @Override
+                    public void onResponse(Call <Main> call, Response<Main> response) {
+                        Log.e("onResponse", String.valueOf(response.raw()));
+                        textView.setText(response.body().getDataset().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call< Main> call, Throwable t) {
+                        Log.e("onFail", t.getMessage());
+                        textView.setText("Something went wrong: " + t.getMessage());
+                    }
+                });
+            }
+        });*/
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,8 +87,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                Intent i = new Intent(MainActivity.this, HandleActivity.class);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -49,6 +103,60 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        mAdapter = new StocksAdapter(stocksDataListMain);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+
+                })
+        );
+
+        /*prepareStocksData();*/
+
+    }
+
+    /*private void prepareStocksData() {
+        StocksData stocksData = new StocksData("BDX", "2378.5", "23-07-2016");
+        stocksDataList.add(stocksData);
+
+        stocksData = new StocksData("BRD", "6785.5", "23-07-2016");
+        stocksDataList.add(stocksData);
+
+        stocksData = new StocksData("BP", "2146.8", "23-07-2016");
+        stocksDataList.add(stocksData);
+    }*/
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1: {
+                // resultCode is set by the second activity
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get our result from the data Intent and display it
+                    /*result = data.getParcelableExtra("name");*/
+                    Log.e("TAG", "result: " + result);
+                    /*Toast.makeText(this, "Result: " + result, Toast.LENGTH_LONG).show();*/
+                    stocksDataListMain.add(result);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            }
+        }
     }
 
     @Override

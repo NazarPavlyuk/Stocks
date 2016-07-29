@@ -1,7 +1,9 @@
-package com.mybringback.thebasics.trade;
+package com.mybringback.thebasics.trade.login;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
+
+import com.mybringback.thebasics.trade.R;
 
 /**
  * Created by ALLO on 21.07.2016.
