@@ -157,9 +157,9 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         }
     };*/
 
-    public void onRetrofit(){
+    /*public void onRetrofit(){
 
-        String query = /*"BDX"*/SearchManager.QUERY;
+        String query = *//*"BDX"*//*SearchManager.QUERY;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.quandl.com/api/v3/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -173,10 +173,10 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
             public void onResponse(Call <Main> call, Response<Main> response) {
                 Log.e("onResponse", String.valueOf(response.raw()));
                 Log.e("TAG", response.body().toString());
-                /*Dataset dataset = new Dataset();
+                *//*Dataset dataset = new Dataset();
                 dataset.setDataset_code(response.body().getDataset().getDataset_code().toString());
                 dataset.setDate(response.body().getDataset().getDate().toString());
-                dataset.setValue(response.body().getDataset().getValue().toString());*/
+                dataset.setValue(response.body().getDataset().getValue().toString());*//*
                 stocksDataList.add(response.body().getDataset());
                 mAdapter.notifyDataSetChanged();
             }
@@ -186,7 +186,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
                 Log.e("onFail", t.getMessage());
             }
         });
-    }
+    }*/
 
     @Override
     public boolean onQueryTextChange(String newText) {
