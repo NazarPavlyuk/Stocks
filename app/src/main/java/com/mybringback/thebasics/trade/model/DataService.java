@@ -10,6 +10,6 @@ import retrofit2.http.Query;
  */
 public interface DataService {
     @GET("datasets/WIKI/{item}.json")
-    Call<Main> searchItem(@Path("item") String item/*, @Query("rows") String rows, @Query("order") String order*/);
+    Call<Main> searchItem(@Path("item") String item);
 
 }

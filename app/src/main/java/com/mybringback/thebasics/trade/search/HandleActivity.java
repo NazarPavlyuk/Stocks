@@ -1,6 +1,7 @@
 package com.mybringback.thebasics.trade.search;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -38,12 +39,17 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
 
     public static final String ARG_EXAMPLE_NAME = "name";
     private List<Dataset> stocksDataList = new ArrayList<>();
+
+
+
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
     Context context;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_handle);
 
@@ -57,6 +63,9 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
+                        dialog = new ProgressDialog(HandleActivity.this);
+                        dialog.setMessage("Sending");
+                        dialog.show();
                         // do whatever
                         Intent intent = new Intent();
                         // Add the required data to be sent to the first activity
@@ -106,13 +115,17 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+
+        dialog = new ProgressDialog(HandleActivity.this);
+        dialog.setMessage("Searching");
+        dialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.quandl.com/api/v3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         DataService service = retrofit.create(DataService.class);
         final Call<Main> call =
-                service.searchItem(query/*, "10","desc"*/);
+                service.searchItem(query);
 
         call.enqueue(new Callback<Main>() {
             @Override
@@ -121,6 +134,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
                 Log.e("TAG", response.body().toString());
                 stocksDataList.add(response.body().getDataset());
                 mAdapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
 
             @Override
@@ -136,5 +150,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
     public boolean onQueryTextChange(String newText) {
         return false;
     }
+
+
 
 }

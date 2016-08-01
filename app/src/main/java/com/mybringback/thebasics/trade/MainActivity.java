@@ -42,15 +42,15 @@ public class MainActivity extends AppCompatActivity
     private StocksAdapter mAdapter;
     Context context;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mAuth = LoginActivity.Singleton.instance();
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
+                        startActivity(new Intent(MainActivity.this, StocksActivity.class));
                     }
                     @Override
                     public void onLongItemClick(View view, int position) {
@@ -97,7 +98,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
 
             switch (item.getItemId()){
                 case R.id.action_settings:

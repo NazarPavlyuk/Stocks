@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "790557104962",
-    "firebase_url": "https://new-trade.firebaseio.com",
-    "project_id": "new-trade",
-    "storage_bucket": "new-trade.appspot.com"
+    "project_number": "622694959678",
+    "firebase_url": "https://stocks-cf94b.firebaseio.com",
+    "project_id": "stocks-cf94b",
+    "storage_bucket": "stocks-cf94b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:790557104962:android:41b57b2b3efaae26",
+        "mobilesdk_app_id": "1:622694959678:android:41b57b2b3efaae26",
         "android_client_info": {
           "package_name": "com.mybringback.thebasics.trade"
         }
       },
       "oauth_client": [
         {
-          "client_id": "790557104962-gtivmflhapghlthopp32f3e2a8nhm9ff.apps.googleusercontent.com",
+          "client_id": "622694959678-5omru27i4ord6vuif0upegmrvnsd8vim.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHhNbcVZr1Uq4RvRJ68jC3WN2CuttvQIM"
+          "current_key": "AIzaSyC2XTXUZXwY9gtVgQV8WcoHRl4KndxAfz4"
         }
       ],
       "services": {

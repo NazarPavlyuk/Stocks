@@ -1,6 +1,9 @@
 package com.mybringback.thebasics.trade.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class Dataset  {
@@ -8,6 +11,7 @@ public class Dataset  {
 
     private List<List<String>> data;
     private String dataset_code;
+
 
 
     public String getDataset_code() {

@@ -95,8 +95,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(TAG,"createUserWithEmail:onComplete"+task.isSuccessful());
-
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "createUserWithEmail:onComplete " + task.isSuccessful());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
                 if(!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
@@ -117,13 +119,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(TAG,"signInWithEmail:onComplete"+task.isSuccessful());
-
-                if(!task.isSuccessful()) {
-                    Log.w(TAG,"signInWithEmail", task.getException());
+                if(task.isSuccessful()) {
+                    Log.e(TAG, "signInWithEmail:onComplete" + task.isSuccessful());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                } else if(!task.isSuccessful()) {
+                    Log.e(TAG,"signInWithEmail", task.getException());
                     Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
-
                 hideProgressDialog();
             }
         });
@@ -180,11 +182,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.email_create_account_button:
                 createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 break;
             case R.id.email_sign_in_button:
                 signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 break;
             /*case R.id.sign_out_button:
                 signOut();

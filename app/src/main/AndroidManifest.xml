@@ -3,7 +3,8 @@
     package="com.mybringback.thebasics.trade">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-   <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,19 +23,20 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" >
-            </activity>
-        <activity
-            android:name=".search.HandleActivity">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".search.HandleActivity">
             <intent-filter>
-            <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-            <meta-dataModel android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+
+            <meta-dataModel
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
+        <activity android:name=".StocksActivity"></activity>
     </application>
 
 </manifest>
