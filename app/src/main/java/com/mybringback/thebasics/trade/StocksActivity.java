@@ -9,7 +9,11 @@ import java.text.DecimalFormat;
 public class StocksActivity extends AppCompatActivity {
 
     TextView open, close, low, high, change, changeProc;
-    float floatOpenTday , floatOpenYday, floatChange, floatChangeProc;
+    float floatOpenTday;
+    float floatOpenYday;
+    float floatChange;
+    String Change, ChangeProc;
+    float floatChangeProc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +29,10 @@ public class StocksActivity extends AppCompatActivity {
 
         floatOpenTday = Float.parseFloat(MainActivity.result.getData().get(0).get(1));
         floatOpenYday = Float.parseFloat(MainActivity.result.getData().get(1).get(1));
-        floatChange = floatOpenTday - floatOpenYday;
+        floatChange = floatOpenTday-floatOpenYday;
+        Change = String.format("%.2f", floatChange);
         floatChangeProc =  (floatChange/floatOpenYday)*100;
+        ChangeProc = String.format("%.2f", floatChangeProc);
 
 
 
@@ -34,8 +40,8 @@ public class StocksActivity extends AppCompatActivity {
         close.setText("Close: " + MainActivity.result.getData().get(0).get(4));
         high.setText("High: " + MainActivity.result.getData().get(0).get(2));
         low.setText("Low: " + MainActivity.result.getData().get(0).get(3));
-        change.setText("Change: " + floatChange);
-        changeProc.setText("Change: " + floatChangeProc + "%");
+        change.setText("Change: " + Change);
+        changeProc.setText("Change: " + ChangeProc + "%");
 
     }
 }
