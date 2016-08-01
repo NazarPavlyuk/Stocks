@@ -74,22 +74,8 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
                 })
         );
 
-        /*onRetrofit();*/
-
-        /*prepareStocksData();*/
-        /*if(SearchManager.QUERY!=null){
-            Intent searchIntent = new Intent();
-            searchIntent.putExtra("result" ,Uri.parse(searchIntent.getStringExtra(SearchManager.QUERY)));
-            setResult(RESULT_OK, searchIntent);
-            finish();
-        }*/
     }
 
-   /* private void prepareStocksData() {
-            StocksData stocksData = new StocksData();
-            stocksDataList.add(stocksData);
-
-    }*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -97,6 +83,14 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search, menu);
 
+        MenuItem backItem = menu.findItem(R.id.action_back);
+        backItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                startActivity(new Intent(HandleActivity.this, MainActivity.class));
+                return false;
+            }
+        });
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -106,37 +100,25 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        /*Intent searchIntent = new Intent();*/
-        /*if(Intent.ACTION_SEARCH.equals(searchIntent.getAction())){
-            String query = searchIntent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(HandleActivity.this,query, Toast.LENGTH_SHORT);
-        }*/
-        /*searchIntent.putExtra("result" ,Uri.parse(query));
-        setResult(RESULT_OK, searchIntent);
-        finish();*/
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.quandl.com/api/v3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         DataService service = retrofit.create(DataService.class);
         final Call<Main> call =
-                service.rowsOrder(query, "10","desc");
+                service.searchItem(query/*, "10","desc"*/);
 
         call.enqueue(new Callback<Main>() {
             @Override
             public void onResponse(Call <Main> call, Response<Main> response) {
                 Log.e("onResponse", String.valueOf(response.raw()));
                 Log.e("TAG", response.body().toString());
-                /*Dataset dataset = new Dataset();
-                dataset.setDataset_code(response.body().getDataset().getDataset_code().toString());
-                dataset.setDate(response.body().getDataset().getDate().toString());
-                dataset.setValue(response.body().getDataset().getValue().toString());*/
                 stocksDataList.add(response.body().getDataset());
                 mAdapter.notifyDataSetChanged();
             }
@@ -149,52 +131,10 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         return false;
     }
 
-   /* Handler handler;
-    Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            Log.e("TA", "run");
-        }
-    };*/
-
-    /*public void onRetrofit(){
-
-        String query = *//*"BDX"*//*SearchManager.QUERY;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.quandl.com/api/v3/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        DataService service = retrofit.create(DataService.class);
-        final Call<Main> call =
-                service.rowsOrder(query, "10","desc");
-
-        call.enqueue(new Callback<Main>() {
-            @Override
-            public void onResponse(Call <Main> call, Response<Main> response) {
-                Log.e("onResponse", String.valueOf(response.raw()));
-                Log.e("TAG", response.body().toString());
-                *//*Dataset dataset = new Dataset();
-                dataset.setDataset_code(response.body().getDataset().getDataset_code().toString());
-                dataset.setDate(response.body().getDataset().getDate().toString());
-                dataset.setValue(response.body().getDataset().getValue().toString());*//*
-                stocksDataList.add(response.body().getDataset());
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call< Main> call, Throwable t) {
-                Log.e("onFail", t.getMessage());
-            }
-        });
-    }*/
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        /*handler.removeCallbacks(r);
-        handler = new Handler();
-        handler.postDelayed(r, 2000);*/
         return false;
     }
-
 
 }

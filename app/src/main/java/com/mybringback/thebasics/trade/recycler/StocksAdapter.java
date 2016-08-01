@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.mybringback.thebasics.trade.R;
 import com.mybringback.thebasics.trade.model.Dataset;
-import com.mybringback.thebasics.trade.model.Main;
 
 import java.util.List;
 
@@ -45,14 +44,9 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Dataset stocks = stocksDataList.get(position);
-        /*holder.stock_symbol.setText( stocks.getDataset_code());*/
-       /* holder.current_date.setText( stocks.getDate());
-        holder.current_value.setText(stocks.getValue());*/
         holder.stock_symbol.setText( stocks.getDataset_code());
         holder.current_date.setText( stocks.getData().get(0).get(0));
         holder.current_value.setText(stocks.getData().get(0).get(1));
-        /*holder.current_date.setText( stocks.getDate());
-        holder.current_value.setText(stocks.getValue());*/
     }
 
     @Override

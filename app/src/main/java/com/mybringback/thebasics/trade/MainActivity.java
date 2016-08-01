@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_EXAMPLE = 0;
     private FirebaseAuth mAuth;
-    Button button;
     private List<Dataset> stocksDataListMain = new ArrayList<>();
     public static Dataset result;
     private RecyclerView recyclerView;
@@ -50,35 +49,7 @@ public class MainActivity extends AppCompatActivity
 
         mAuth = LoginActivity.Singleton.instance();
 
-       /* button = (Button) findViewById(R.id.button);
-        final  TextView textView=(TextView) findViewById(R.id.textView2);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://www.quandl.com/api/v3/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                DataService service = retrofit.create(DataService.class);
-                final Call<Main> call =
-                        service.rowsOrder("10","desc");
-
-                call.enqueue(new Callback<Main>() {
-                    @Override
-                    public void onResponse(Call <Main> call, Response<Main> response) {
-                        Log.e("onResponse", String.valueOf(response.raw()));
-                        textView.setText(response.body().getDataset().toString());
-                    }
-
-                    @Override
-                    public void onFailure(Call< Main> call, Throwable t) {
-                        Log.e("onFail", t.getMessage());
-                        textView.setText("Something went wrong: " + t.getMessage());
-                    }
-                });
-            }
-        });*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -87,8 +58,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
+
                 Intent i = new Intent(MainActivity.this, HandleActivity.class);
                 startActivityForResult(i, 1);
             }
@@ -117,7 +87,6 @@ public class MainActivity extends AppCompatActivity
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                     }
-
                     @Override
                     public void onLongItemClick(View view, int position) {
 
@@ -126,20 +95,9 @@ public class MainActivity extends AppCompatActivity
                 })
         );
 
-        /*prepareStocksData();*/
 
     }
 
-    /*private void prepareStocksData() {
-        StocksData stocksData = new StocksData("BDX", "2378.5", "23-07-2016");
-        stocksDataList.add(stocksData);
-
-        stocksData = new StocksData("BRD", "6785.5", "23-07-2016");
-        stocksDataList.add(stocksData);
-
-        stocksData = new StocksData("BP", "2146.8", "23-07-2016");
-        stocksDataList.add(stocksData);
-    }*/
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
