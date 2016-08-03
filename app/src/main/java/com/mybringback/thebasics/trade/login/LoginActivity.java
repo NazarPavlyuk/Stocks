@@ -1,6 +1,7 @@
 package com.mybringback.thebasics.trade.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import android.os.Bundle;
@@ -25,6 +26,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     public static String TAG = "EmailPassword";
 
+    SharedPreferences sPref;
+
+    final String SAVED_PASSWORD = "saved_password";
+    final String SAVED_EMAIL="saved_email";
+
     private EditText mEmailField;
     private EditText mPasswordField;
 
@@ -39,6 +45,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
     public FirebaseAuth mAuth;
+    public FirebaseUser user;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -53,6 +60,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.email_sign_in_button).setOnClickListener(this);
         findViewById(R.id.email_create_account_button).setOnClickListener(this);
 
+        loadText();
+
         mAuth = Singleton.instance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -61,6 +70,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    sPref = getPreferences(MODE_PRIVATE);
+                    boolean savedUser = sPref.getBoolean(user.getUid(), true);
+                    if(savedUser) {
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    }
+
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
@@ -158,6 +173,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         return valid;
     }
 
+    void saveText(){
+        sPref = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString(SAVED_EMAIL,mEmailField.getText().toString());
+        ed.putString(SAVED_PASSWORD,mPasswordField.getText().toString());
+        ed.commit();
+        Toast.makeText(this,"user saved", Toast.LENGTH_SHORT).show();
+    }
+
+    void loadText(){
+        sPref = getPreferences(MODE_PRIVATE);
+        String savedEmail = sPref.getString(SAVED_EMAIL,"");
+        String savedPassword = sPref.getString(SAVED_PASSWORD,"");
+        mEmailField.setText(savedEmail);
+        mPasswordField.setText(savedPassword);
+        Toast.makeText(this, "user loaded", Toast.LENGTH_LONG).show();
+    }
+
+    void saveUser() {
+        sPref = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        if (user != null){
+            ed.putBoolean(user.getUid(), true);
+    }
+        ed.commit();
+    }
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        saveText();
+    }
+
+
     /*private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
@@ -182,9 +232,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.email_create_account_button:
                 createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
+                saveUser();
                 break;
             case R.id.email_sign_in_button:
                 signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+                saveText();
+                saveUser();
                 break;
             /*case R.id.sign_out_button:
                 signOut();

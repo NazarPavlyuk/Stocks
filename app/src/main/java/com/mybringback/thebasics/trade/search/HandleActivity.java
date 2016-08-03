@@ -54,7 +54,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_handle);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new StocksAdapter(stocksDataList);
+        mAdapter = new StocksAdapter(getApplicationContext(),stocksDataList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -40,10 +40,8 @@ public class MainActivity extends AppCompatActivity
     public static Dataset result;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
+
     Context context;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        mAdapter = new StocksAdapter(stocksDataListMain);
+        mAdapter = new StocksAdapter(getApplicationContext(),stocksDataListMain);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
