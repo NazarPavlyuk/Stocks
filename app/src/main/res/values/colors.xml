@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#1c34bc</color>
-    <color name="current_value">#999999</color>
+    <color name="current_value">#030303</color>
     <color name="stocks_symbol">#222222</color>
     <color name="colorChangeNegative">#ff0000</color>
     <color name="colorChangePositive">#00cd00</color>

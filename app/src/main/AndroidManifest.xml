@@ -35,8 +35,19 @@
             <meta-dataModel
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mybringback.thebasics.trade.MainActivity" />
+
         </activity>
-        <activity android:name=".StocksActivity"></activity>
+
+        <activity android:name=".StocksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mybringback.thebasics.trade.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

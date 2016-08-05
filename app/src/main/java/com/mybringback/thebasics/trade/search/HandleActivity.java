@@ -53,6 +53,8 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_handle);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new StocksAdapter(getApplicationContext(),stocksDataList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -92,14 +94,14 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search, menu);
 
-        MenuItem backItem = menu.findItem(R.id.action_back);
+        /*MenuItem backItem = menu.findItem(R.id.action_back);
         backItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 startActivity(new Intent(HandleActivity.this, MainActivity.class));
                 return false;
             }
-        });
+        });*/
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);

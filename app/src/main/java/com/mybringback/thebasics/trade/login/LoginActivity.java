@@ -60,8 +60,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.email_sign_in_button).setOnClickListener(this);
         findViewById(R.id.email_create_account_button).setOnClickListener(this);
 
-        loadText();
-
         mAuth = Singleton.instance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -173,23 +171,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         return valid;
     }
 
-    void saveText(){
-        sPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putString(SAVED_EMAIL,mEmailField.getText().toString());
-        ed.putString(SAVED_PASSWORD,mPasswordField.getText().toString());
-        ed.commit();
-        Toast.makeText(this,"user saved", Toast.LENGTH_SHORT).show();
-    }
-
-    void loadText(){
-        sPref = getPreferences(MODE_PRIVATE);
-        String savedEmail = sPref.getString(SAVED_EMAIL,"");
-        String savedPassword = sPref.getString(SAVED_PASSWORD,"");
-        mEmailField.setText(savedEmail);
-        mPasswordField.setText(savedPassword);
-        Toast.makeText(this, "user loaded", Toast.LENGTH_LONG).show();
-    }
 
     void saveUser() {
         sPref = getPreferences(MODE_PRIVATE);
@@ -204,7 +185,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        saveText();
     }
 
 
@@ -236,7 +216,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.email_sign_in_button:
                 signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-                saveText();
                 saveUser();
                 break;
             /*case R.id.sign_out_button:

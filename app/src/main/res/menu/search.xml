@@ -9,9 +9,9 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
 
-    <item
+    <!--<item
         android:id="@+id/action_back"
         android:icon="@mipmap/ic_back"
         android:title="Return"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"/>-->
 </menu>

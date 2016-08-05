@@ -3,6 +3,7 @@ package com.mybringback.thebasics.trade;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,9 @@ import com.mybringback.thebasics.trade.search.HandleActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,13 +45,15 @@ public class MainActivity extends AppCompatActivity
     public static Dataset result;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
+    FloatingActionButton fabClear;
+   /* private Realm realm;*/
 
     Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+          setContentView(R.layout.activity_main);
 
         mAuth = LoginActivity.Singleton.instance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,6 +69,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        /*fabClear = (FloatingActionButton) findViewById(R.id.fab_clear);*/
+        /*fabClear.setVisibility(View.GONE);*/
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,6 +82,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /*RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.deleteRealm(realmConfiguration);
+        realm = Realm.getInstance(realmConfiguration);*/
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mAdapter = new StocksAdapter(getApplicationContext(),stocksDataListMain);
@@ -79,23 +94,50 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int position) {
+                stocksDataListMain.remove(viewHolder.getAdapterPosition());
+                mAdapter.notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                         startActivity(new Intent(MainActivity.this, StocksActivity.class));
+
                     }
                     @Override
-                    public void onLongItemClick(View view, int position) {
-
+                    public void onLongItemClick(View view, final int position) {
+                        /*fabClear.setVisibility(View.VISIBLE);*/
+                        /*fabClear.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                stocksDataListMain.remove(position);
+                                mAdapter.notifyItemRemoved(position);
+                            }
+                        });*/
+                        /*stocksDataListMain.remove(position);
+                        mAdapter.notifyItemRemoved(position);*/
                     }
 
                 })
         );
-
-
+        
     }
+
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

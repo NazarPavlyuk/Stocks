@@ -1,6 +1,7 @@
 package com.mybringback.thebasics.trade.recycler;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView stock_symbol, current_date, current_value, current_absolute_change, current_relative_change;
         public RelativeLayout relativeLayout;
+        public FloatingActionButton fabClear;
 
         public MyViewHolder(View view) {
             super(view);
@@ -39,10 +41,12 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
             current_date = (TextView) view.findViewById(R.id.current_date);
             current_value = (TextView) view.findViewById(R.id.current_value);
 
-            relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
             current_absolute_change = (TextView) view.findViewById(R.id.current_absolute_change);
             current_relative_change = (TextView) view.findViewById(R.id.current_relative_change);
 
+            relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
+
+            /*fabClear = (FloatingActionButton) view.findViewById(R.id.fab_clear);*/
         }
     }
 
@@ -81,7 +85,7 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
         floatChangeProc =  (floatChange/Float.parseFloat(stocks.getData().get(1).get(1)))*100;
         ChangeProc = String.format("%.2f", floatChangeProc);
         holder.current_absolute_change.setText(Change);
-        holder.current_relative_change.setText(ChangeProc);
+        holder.current_relative_change.setText(ChangeProc + "%");
     }
     @Override
     public int getItemCount() {
