@@ -1,9 +1,8 @@
-package com.mybringback.thebasics.trade.recycler;
+package com.mybringback.thebasics.trade.adapter;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mybringback.thebasics.trade.MainActivity;
 import com.mybringback.thebasics.trade.R;
-import com.mybringback.thebasics.trade.model.Dataset;
+import com.mybringback.thebasics.trade.JSONmodel.Dataset;
 
 import java.util.List;
 

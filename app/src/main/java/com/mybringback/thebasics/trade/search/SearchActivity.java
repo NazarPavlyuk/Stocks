@@ -20,11 +20,11 @@ import android.view.View;
 
 import com.mybringback.thebasics.trade.MainActivity;
 import com.mybringback.thebasics.trade.R;
-import com.mybringback.thebasics.trade.model.DataService;
-import com.mybringback.thebasics.trade.model.Dataset;
-import com.mybringback.thebasics.trade.model.Main;
-import com.mybringback.thebasics.trade.recycler.RecyclerItemClickListener;
-import com.mybringback.thebasics.trade.recycler.StocksAdapter;
+import com.mybringback.thebasics.trade.JSONmodel.DataService;
+import com.mybringback.thebasics.trade.JSONmodel.Dataset;
+import com.mybringback.thebasics.trade.JSONmodel.Main;
+import com.mybringback.thebasics.trade.adapter.RecyclerItemClickListener;
+import com.mybringback.thebasics.trade.adapter.StocksAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HandleActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     public static final String ARG_EXAMPLE_NAME = "name";
     private List<Dataset> stocksDataList = new ArrayList<>();
-
-
 
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
@@ -65,14 +63,14 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        dialog = new ProgressDialog(HandleActivity.this);
+                        dialog = new ProgressDialog(SearchActivity.this);
                         dialog.setMessage("Sending");
                         dialog.show();
                         // do whatever
                         Intent intent = new Intent();
                         // Add the required data to be sent to the first activity
                         /*intent.putExtra(ARG_EXAMPLE_NAME,  stocksDataList.get(position));*/
-                        MainActivity.result=stocksDataList.get(position);
+                        /*MainActivity.result=stocksDataList.get(position);*/
 
                         // Set the result code, send back the intent with the data to be managed by the first activity
                         setResult(Activity.RESULT_OK, intent);
@@ -98,7 +96,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
         backItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                startActivity(new Intent(HandleActivity.this, MainActivity.class));
+                startActivity(new Intent(SearchActivity.this, MainActivity.class));
                 return false;
             }
         });*/
@@ -118,7 +116,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        dialog = new ProgressDialog(HandleActivity.this);
+        dialog = new ProgressDialog(SearchActivity.this);
         dialog.setMessage("Searching");
         dialog.show();
         Retrofit retrofit = new Retrofit.Builder()
@@ -127,7 +125,7 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
                 .build();
         DataService service = retrofit.create(DataService.class);
         final Call<Main> call =
-                service.searchItem(query);
+                service.searchItem(query, "365", "desc");
 
         call.enqueue(new Callback<Main>() {
             @Override
@@ -152,7 +150,5 @@ public class HandleActivity extends AppCompatActivity implements SearchView.OnQu
     public boolean onQueryTextChange(String newText) {
         return false;
     }
-
-
 
 }

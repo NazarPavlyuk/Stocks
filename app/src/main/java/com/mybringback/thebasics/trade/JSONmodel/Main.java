@@ -1,4 +1,4 @@
-package com.mybringback.thebasics.trade.model;
+package com.mybringback.thebasics.trade.JSONmodel;
 
 /**
  * Created by ALLO on 22.07.2016.

@@ -1,4 +1,4 @@
-package com.mybringback.thebasics.trade.recycler;
+package com.mybringback.thebasics.trade.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -1,18 +1,18 @@
-package com.mybringback.thebasics.trade.model;
-
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.mybringback.thebasics.trade.DatabaseModel;
 
 import java.util.List;
 
-public class Dataset  {
-
-
+/**
+ * Created by ALLO on 27.08.2016.
+ */
+public class DataSavior {
     private List<List<String>> data;
     private String dataset_code;
 
-
+    public DataSavior(List<List<String>> data, String dataset_code) {
+        this.data = data;
+        this.dataset_code = dataset_code;
+    }
 
     public String getDataset_code() {
         return dataset_code;
@@ -30,8 +30,4 @@ public class Dataset  {
         this.data = data;
     }
 
-
 }
-
-
-

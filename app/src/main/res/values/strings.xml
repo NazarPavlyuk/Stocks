@@ -28,4 +28,6 @@
     <string name="action_sign_out">Sign out</string>
     <string name="app_label">Trade</string>
     <string name="search_hint">Looking for stock symbols</string>
+
+    <string name="facebook_app_id">557672607749235</string>
 </resources>

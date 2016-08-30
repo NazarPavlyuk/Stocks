@@ -1,4 +1,4 @@
-package com.mybringback.thebasics.trade.model;
+package com.mybringback.thebasics.trade.JSONmodel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -10,6 +10,6 @@ import retrofit2.http.Query;
  */
 public interface DataService {
     @GET("datasets/WIKI/{item}.json")
-    Call<Main> searchItem(@Path("item") String item);
+    Call<Main> searchItem(@Path("item") String item, @Query("rows") String rows, @Query("order") String order);
 
 }

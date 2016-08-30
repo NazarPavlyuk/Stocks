@@ -1,59 +1,107 @@
 package com.mybringback.thebasics.trade;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
+/*import com.facebook.login.LoginManager;*/
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.mybringback.thebasics.trade.DatabaseModel.DataSavior;
+import com.mybringback.thebasics.trade.JSONmodel.DataService;
+import com.mybringback.thebasics.trade.JSONmodel.Dataset;
+import com.mybringback.thebasics.trade.JSONmodel.Main;
+import com.mybringback.thebasics.trade.RealmModel.DataSave;
 import com.mybringback.thebasics.trade.login.LoginActivity;
-import com.mybringback.thebasics.trade.model.Dataset;
-import com.mybringback.thebasics.trade.model.Main;
-import com.mybringback.thebasics.trade.recycler.RecyclerItemClickListener;
-import com.mybringback.thebasics.trade.recycler.StocksAdapter;
-import com.mybringback.thebasics.trade.search.HandleActivity;
+import com.mybringback.thebasics.trade.adapter.RecyclerItemClickListener;
+import com.mybringback.thebasics.trade.adapter.StocksAdapter;
+import com.mybringback.thebasics.trade.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,SearchView.OnQueryTextListener {
 
     private static final int REQUEST_EXAMPLE = 0;
     private FirebaseAuth mAuth;
     private List<Dataset> stocksDataListMain = new ArrayList<>();
+    /*private RealmList<DataSavior> stocksDataListBase = new RealmList<>();*/
     public static Dataset result;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
-    FloatingActionButton fabClear;
-   /* private Realm realm;*/
-
+    private Realm realm;
     Context context;
+    ProgressDialog dialog;
+    Menu menu;
+    private SearchView searchView;
+    private MenuItem searchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-          setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+
+        final RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+
+        realm = Realm.getDefaultInstance();
+
+        final RealmResults<DataSave> elements = realm.where(DataSave.class).findAll();
+
+        List<List<String>> secondlyAddedElements = new ArrayList<>();
+
+        List<String> firstlyAddedElements = new ArrayList<>();
+        List<String> executedElements = new ArrayList<>();
+
+        for(DataSave element:elements){
+            String blockDividedBySemicolon = element.getData();
+            String[] getBlockDividedByComa = blockDividedBySemicolon.split(";");
+            secondlyAddedElements.clear();
+            firstlyAddedElements.clear();
+            for (int j = 0; j < getBlockDividedByComa.length; j++) {
+                String[] unit = getBlockDividedByComa[j].split(",");
+                for (int i = 0; i < unit.length; i++) {
+                    firstlyAddedElements.add(unit[i]);
+                }
+                secondlyAddedElements.add(firstlyAddedElements);
+            }
+            executedElements.clear();
+
+            stocksDataListMain.add(new Dataset(secondlyAddedElements, element.getDataset_code()));
+        }
+
+        /*searchItem.setVisible(false);
+        searchView.setVisibility(View.GONE);*/
 
         mAuth = LoginActivity.Singleton.instance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -63,15 +111,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent i = new Intent(MainActivity.this, HandleActivity.class);
-                startActivityForResult(i, 1);
+                /*Intent i = new Intent(MainActivity.this, SearchActivity.class);
+                startActivityForResult(i, 1);*/
+                /*menu.findItem(R.id.action_search).setVisible(true);*/
+                searchItem.setVisible(true);
+                searchView.setVisibility(View.VISIBLE);
             }
         });
-
-        /*fabClear = (FloatingActionButton) findViewById(R.id.fab_clear);*/
-        /*fabClear.setVisibility(View.GONE);*/
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -82,16 +128,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration);
-        realm = Realm.getInstance(realmConfiguration);*/
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mAdapter = new StocksAdapter(getApplicationContext(),stocksDataListMain);
+        /*rAdapter = new RealmAdapter(getApplicationContext(),stocksDataListBase);*/
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         recyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -103,6 +148,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int position) {
                 stocksDataListMain.remove(viewHolder.getAdapterPosition());
+                try {
+                    final DataSave element = realm.where(DataSave.class).equalTo("dataset_code", stocksDataListMain.get(viewHolder.getAdapterPosition()).getDataset_code()).findFirst();
+                    realm.beginTransaction();
+                    element.deleteFromRealm();
+                    realm.commitTransaction();
+                } catch (IndexOutOfBoundsException e){
+                    realm.beginTransaction();
+                    realm.deleteAll();
+                    realm.commitTransaction();
+                }
                 mAdapter.notifyDataSetChanged();
             }
         };
@@ -115,47 +170,85 @@ public class MainActivity extends AppCompatActivity
 
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
+                        result = stocksDataListMain.get(position);
+                        final DataSave dataSave = new DataSave();
+                        dataSave.setDataset_code(result.getDataset_code());
+                        String blockDividedBySemicolon = "";
+                        for(int j = 0; j<result.getData().size(); j++){
+                            String makeBlockDividedByComa = "";
+                            for (int i = 0; i < result.getData().get(j).size(); i++) {
+                                String element;
+                                element = result.getData().get(j).get(i);
+                                makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
+                            }
+                            makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
+                            blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
+                        }
+                        blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
+                        dataSave.setData(blockDividedBySemicolon);
+                        realm.beginTransaction();
+                        realm.copyToRealm(dataSave);
+                        realm.commitTransaction();
                         startActivity(new Intent(MainActivity.this, StocksActivity.class));
-
+                        finish();
                     }
                     @Override
                     public void onLongItemClick(View view, final int position) {
-                        /*fabClear.setVisibility(View.VISIBLE);*/
-                        /*fabClear.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                stocksDataListMain.remove(position);
-                                mAdapter.notifyItemRemoved(position);
-                            }
-                        });*/
-                        /*stocksDataListMain.remove(position);
-                        mAdapter.notifyItemRemoved(position);*/
                     }
 
                 })
         );
-        
+
     }
 
-
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+ /*   public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 1: {
                 // resultCode is set by the second activity
                 if (resultCode == Activity.RESULT_OK) {
                     // Get our result from the data Intent and display it
-                    /*result = data.getParcelableExtra("name");*/
+                    *//*result = data.getParcelableExtra("name");*//*
                     Log.e("TAG", "result: " + result);
-                    /*Toast.makeText(this, "Result: " + result, Toast.LENGTH_LONG).show();*/
+                    *//*Toast.makeText(this, "Result: " + result, Toast.LENGTH_LONG).show();*//*
+                   *//* mRealm.beginTransaction();
+                    stocksDataListMain.add(result);
+                    mRealm.copyToRealmOrUpdate(stocksDataListBase);
+                    mRealm.commitTransaction();*//*
+                    *//*realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.createObject(DataSavior.class);
+                        }
+                    });*//*
+                    final DataSave dataSave = new DataSave();
+                    dataSave.setDataset_code(result.getDataset_code());
+                    String blockDividedBySemicolon = "";
+                    for(int j = 0; j<result.getData().size(); j++){
+                        String makeBlockDividedByComa = "";
+                        for (int i = 0; i < result.getData().get(j).size(); i++) {
+                            String element;
+                            element = result.getData().get(j).get(i);
+                            makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
+                        }
+                        makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
+                        blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
+                    }
+                    blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
+                    dataSave.setData(blockDividedBySemicolon);
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealm(dataSave);
+                        }
+                    });
                     stocksDataListMain.add(result);
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
             }
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -171,24 +264,37 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.search, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchItem.setVisible(false);
+        searchView.setVisibility(View.GONE);
+        searchView.setOnQueryTextListener(this);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-            switch (item.getItemId()){
-                case R.id.action_settings:
-                    break;
-                case R.id.action_filter:
-                    break;
-                case R.id.action_sign_out:
-                    mAuth.signOut();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
-                    break;
-            }
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                break;
+            case R.id.action_filter:
+                break;
+            case R.id.action_sign_out:
+                mAuth.signOut();
+                LoginManager.getInstance().logOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                break;
+        }
+        return true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -214,5 +320,74 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Searching");
+        dialog.show();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.quandl.com/api/v3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        DataService service = retrofit.create(DataService.class);
+        final Call<Main> call =
+                service.searchItem(query, "365", "desc");
+
+        call.enqueue(new Callback<Main>() {
+            @Override
+            public void onResponse(Call <Main> call, Response<Main> response) {
+                /*Log.e("onResponse", String.valueOf(response.raw()));
+                Log.e("TAG", response.body().toString());
+                results = response.body().getDataset();
+                final DataSave dataSave = new DataSave();
+                dataSave.setDataset_code(results.getDataset_code());
+                String blockDividedBySemicolon = "";
+                for(int j = 0; j<results.getData().size(); j++){
+                    String makeBlockDividedByComa = "";
+                    for (int i = 0; i < results.getData().get(j).size(); i++) {
+                        String element;
+                        element = results.getData().get(j).get(i);
+                        makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
+                    }
+                    makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
+                    blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
+                }
+                blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
+                dataSave.setData(blockDividedBySemicolon);
+                realm.beginTransaction();
+                realm.copyToRealm(dataSave);
+                realm.commitTransaction();
+                stocksDataListMain.add(results);*/
+                stocksDataListMain.add(response.body().getDataset());
+                mAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call< Main> call, Throwable t) {
+                Log.e("onFail", t.getMessage());
+            }
+        });
+        searchView.clearFocus();
+        return false;
+    }
+
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        finish();
+    }
+
+    public Realm getRealm() {
+        return realm;
     }
 }
