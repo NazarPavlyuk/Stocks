@@ -35,7 +35,6 @@ import com.mybringback.thebasics.trade.RealmModel.DataSave;
 import com.mybringback.thebasics.trade.login.LoginActivity;
 import com.mybringback.thebasics.trade.adapter.RecyclerItemClickListener;
 import com.mybringback.thebasics.trade.adapter.StocksAdapter;
-import com.mybringback.thebasics.trade.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
