@@ -23,11 +23,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 /*import com.facebook.login.LoginManager;*/
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.mybringback.thebasics.trade.DatabaseModel.DataSavior;
 import com.mybringback.thebasics.trade.JSONmodel.DataService;
 import com.mybringback.thebasics.trade.JSONmodel.Dataset;
 import com.mybringback.thebasics.trade.JSONmodel.Main;
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private List<Dataset> stocksDataListMain = new ArrayList<>();
     /*private RealmList<DataSavior> stocksDataListBase = new RealmList<>();*/
     public static Dataset result;
+    public static Dataset results;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
     private Realm realm;
@@ -78,25 +79,19 @@ public class MainActivity extends AppCompatActivity
 
         final RealmResults<DataSave> elements = realm.where(DataSave.class).findAll();
 
-        List<List<String>> secondlyAddedElements = new ArrayList<>();
-
-        List<String> firstlyAddedElements = new ArrayList<>();
-        List<String> executedElements = new ArrayList<>();
 
         for(DataSave element:elements){
             String blockDividedBySemicolon = element.getData();
             String[] getBlockDividedByComa = blockDividedBySemicolon.split(";");
-            secondlyAddedElements.clear();
-            firstlyAddedElements.clear();
+            List<List<String>> secondlyAddedElements = new ArrayList<>();
             for (int j = 0; j < getBlockDividedByComa.length; j++) {
+                List<String> firstlyAddedElements = new ArrayList<>();
                 String[] unit = getBlockDividedByComa[j].split(",");
                 for (int i = 0; i < unit.length; i++) {
                     firstlyAddedElements.add(unit[i]);
                 }
                 secondlyAddedElements.add(firstlyAddedElements);
             }
-            executedElements.clear();
-
             stocksDataListMain.add(new Dataset(secondlyAddedElements, element.getDataset_code()));
         }
 
@@ -171,24 +166,6 @@ public class MainActivity extends AppCompatActivity
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                         result = stocksDataListMain.get(position);
-                        final DataSave dataSave = new DataSave();
-                        dataSave.setDataset_code(result.getDataset_code());
-                        String blockDividedBySemicolon = "";
-                        for(int j = 0; j<result.getData().size(); j++){
-                            String makeBlockDividedByComa = "";
-                            for (int i = 0; i < result.getData().get(j).size(); i++) {
-                                String element;
-                                element = result.getData().get(j).get(i);
-                                makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
-                            }
-                            makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
-                            blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
-                        }
-                        blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
-                        dataSave.setData(blockDividedBySemicolon);
-                        realm.beginTransaction();
-                        realm.copyToRealm(dataSave);
-                        realm.commitTransaction();
                         startActivity(new Intent(MainActivity.this, StocksActivity.class));
                         finish();
                     }
@@ -200,55 +177,6 @@ public class MainActivity extends AppCompatActivity
         );
 
     }
-
- /*   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1: {
-                // resultCode is set by the second activity
-                if (resultCode == Activity.RESULT_OK) {
-                    // Get our result from the data Intent and display it
-                    *//*result = data.getParcelableExtra("name");*//*
-                    Log.e("TAG", "result: " + result);
-                    *//*Toast.makeText(this, "Result: " + result, Toast.LENGTH_LONG).show();*//*
-                   *//* mRealm.beginTransaction();
-                    stocksDataListMain.add(result);
-                    mRealm.copyToRealmOrUpdate(stocksDataListBase);
-                    mRealm.commitTransaction();*//*
-                    *//*realm.executeTransactionAsync(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.createObject(DataSavior.class);
-                        }
-                    });*//*
-                    final DataSave dataSave = new DataSave();
-                    dataSave.setDataset_code(result.getDataset_code());
-                    String blockDividedBySemicolon = "";
-                    for(int j = 0; j<result.getData().size(); j++){
-                        String makeBlockDividedByComa = "";
-                        for (int i = 0; i < result.getData().get(j).size(); i++) {
-                            String element;
-                            element = result.getData().get(j).get(i);
-                            makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
-                        }
-                        makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
-                        blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
-                    }
-                    blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
-                    dataSave.setData(blockDividedBySemicolon);
-                    realm.executeTransactionAsync(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealm(dataSave);
-                        }
-                    });
-                    stocksDataListMain.add(result);
-                    mAdapter.notifyDataSetChanged();
-                }
-                break;
-            }
-        }
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -328,6 +256,9 @@ public class MainActivity extends AppCompatActivity
         dialog = new ProgressDialog(MainActivity.this);
         dialog.setMessage("Searching");
         dialog.show();
+        if(query.equals(query.toLowerCase())){
+            query = query.toUpperCase();
+        }
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.quandl.com/api/v3/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -339,30 +270,36 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<Main>() {
             @Override
             public void onResponse(Call <Main> call, Response<Main> response) {
-                /*Log.e("onResponse", String.valueOf(response.raw()));
-                Log.e("TAG", response.body().toString());
-                results = response.body().getDataset();
-                final DataSave dataSave = new DataSave();
-                dataSave.setDataset_code(results.getDataset_code());
-                String blockDividedBySemicolon = "";
-                for(int j = 0; j<results.getData().size(); j++){
-                    String makeBlockDividedByComa = "";
-                    for (int i = 0; i < results.getData().get(j).size(); i++) {
-                        String element;
-                        element = results.getData().get(j).get(i);
-                        makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
+                Log.e("onResponse", String.valueOf(response.raw()));
+                try {
+                    Log.e("TAG", response.body().toString());
+                    Dataset res = response.body().getDataset();
+                    final DataSave dataSave = new DataSave();
+                    dataSave.setDataset_code(res.getDataset_code());
+                    String blockDividedBySemicolon = "";
+                    for(int j = 0; j<res.getData().size(); j++){
+                        String makeBlockDividedByComa = "";
+                        for (int i = 0; i < res.getData().get(j).size(); i++) {
+                            String element;
+                            element = res.getData().get(j).get(i);
+                            makeBlockDividedByComa = makeBlockDividedByComa.concat(element+",");
+                        }
+                        makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-1);
+                        blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
                     }
-                    makeBlockDividedByComa = makeBlockDividedByComa.substring(0, makeBlockDividedByComa.length()-2);
-                    blockDividedBySemicolon= blockDividedBySemicolon.concat(makeBlockDividedByComa+";");
+                    blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-1);
+                    dataSave.setData(blockDividedBySemicolon);
+                    realm.beginTransaction();
+                    realm.copyToRealm(dataSave);
+                    realm.commitTransaction();
+                    stocksDataListMain.add(response.body().getDataset());
+                    mAdapter.notifyDataSetChanged();
+                } catch (NullPointerException e){
+                    Log.e("onFail", e.toString());
+                    Toast.makeText(MainActivity.this, "No matches found. Try again.",
+                            Toast.LENGTH_SHORT).show();
                 }
-                blockDividedBySemicolon= blockDividedBySemicolon.substring(0, blockDividedBySemicolon.length()-2);
-                dataSave.setData(blockDividedBySemicolon);
-                realm.beginTransaction();
-                realm.copyToRealm(dataSave);
-                realm.commitTransaction();
-                stocksDataListMain.add(results);*/
-                stocksDataListMain.add(response.body().getDataset());
-                mAdapter.notifyDataSetChanged();
+                /*stocksDataListMain.add(results);*/
                 dialog.dismiss();
             }
 

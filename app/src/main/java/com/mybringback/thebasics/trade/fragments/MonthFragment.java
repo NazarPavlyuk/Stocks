@@ -12,6 +12,7 @@ import com.mybringback.thebasics.trade.MainActivity;
 import com.mybringback.thebasics.trade.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import lecho.lib.hellocharts.animation.ChartAnimationListener;
@@ -41,7 +42,7 @@ public class MonthFragment extends Fragment {
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
     private boolean hasLines = true;
-    private boolean hasPoints = true;
+    private boolean hasPoints = Boolean.parseBoolean(null);
     private ValueShape shape = ValueShape.CIRCLE;
     private boolean isFilled = false;
     private boolean hasLabels = false;
@@ -49,6 +50,7 @@ public class MonthFragment extends Fragment {
     private boolean hasLabelForSelected = false;
     private boolean pointsHaveDifferentColor;
     private float currentValue;
+    private List comparedResults = new ArrayList();
 
     public MonthFragment() {
         // Required empty public constructor
@@ -66,6 +68,10 @@ public class MonthFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        for(int i=0;i<numberOfPoints; i++){
+            comparedResults.add(Float.parseFloat(MainActivity.result.getData().get(i).get(1)));
+        }
+        Collections.sort(comparedResults, Collections.reverseOrder());
     }
 
     @Override
@@ -124,8 +130,10 @@ public class MonthFragment extends Fragment {
     private void resetViewport() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        v.bottom = 0;
-        v.top = 100;
+        /*v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-25;
+        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+25;*/
+        v.bottom = (float) comparedResults.get(numberOfPoints-1)-10;
+        v.top = (float) comparedResults.get(0) +10;
         v.left = 0;
         v.right = numberOfPoints - 1;
         chart.setMaximumViewport(v);
