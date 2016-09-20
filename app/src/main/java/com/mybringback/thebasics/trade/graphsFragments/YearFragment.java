@@ -1,6 +1,5 @@
-package com.mybringback.thebasics.trade.fragments;
+package com.mybringback.thebasics.trade.graphsFragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,12 +29,16 @@ import lecho.lib.hellocharts.view.LineChartView;
 /**
  * Created by ALLO on 03.08.2016.
  */
-public class MonthFragment extends Fragment {
+public class YearFragment extends Fragment {
+    public YearFragment() {
+        // Required empty public constructor
+    }
+
     private LineChartView chart;
     private LineChartData data;
     private int numberOfLines = 1;
     private int maxNumberOfLines = 4;
-    private int numberOfPoints = 31;
+    private int numberOfPoints = 365;
 
     float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints];
 
@@ -52,10 +55,6 @@ public class MonthFragment extends Fragment {
     private float currentValue;
     private List comparedResults = new ArrayList();
 
-    public MonthFragment() {
-        // Required empty public constructor
-    }
-
 
     public float getCurrentValue() {
         return currentValue;
@@ -71,6 +70,7 @@ public class MonthFragment extends Fragment {
         for(int i=0;i<numberOfPoints; i++){
             comparedResults.add(Float.parseFloat(MainActivity.result.getData().get(i).get(1)));
         }
+
         Collections.sort(comparedResults, Collections.reverseOrder());
     }
 
@@ -78,11 +78,11 @@ public class MonthFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_month, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_year, container, false);
 
         setHasOptionsMenu(true);
 
-        chart = (LineChartView) rootView.findViewById(R.id.chart_month);
+        chart = (LineChartView) rootView.findViewById(R.id.chart_year);
         chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateValues();
@@ -130,10 +130,10 @@ public class MonthFragment extends Fragment {
     private void resetViewport() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        /*v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-25;
-        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+25;*/
-        v.bottom = (float) comparedResults.get(numberOfPoints-1)-10;
-        v.top = (float) comparedResults.get(0) +10;
+        /*v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-100;
+        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+100;*/
+        v.bottom = (float) comparedResults.get(numberOfPoints-1)-50;
+        v.top = (float) comparedResults.get(0) +50;
         v.left = 0;
         v.right = numberOfPoints - 1;
         chart.setMaximumViewport(v);
@@ -359,5 +359,4 @@ public class MonthFragment extends Fragment {
 
     }
 }
-
 

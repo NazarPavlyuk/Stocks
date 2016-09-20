@@ -10,32 +10,40 @@ import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.mybringback.thebasics.trade.fragments.HalfYearFragment;
-import com.mybringback.thebasics.trade.fragments.MonthFragment;
-import com.mybringback.thebasics.trade.fragments.ThreeDaysFragment;
-import com.mybringback.thebasics.trade.fragments.ThreeMonthsFragment;
-import com.mybringback.thebasics.trade.fragments.WeekFragment;
-import com.mybringback.thebasics.trade.fragments.YearFragment;
+import com.mybringback.thebasics.trade.JSONmodel.Dataset;
+import com.mybringback.thebasics.trade.RealmModel.DataSave;
+import com.mybringback.thebasics.trade.graphsFragments.HalfYearFragment;
+import com.mybringback.thebasics.trade.graphsFragments.MonthFragment;
+import com.mybringback.thebasics.trade.graphsFragments.ThreeDaysFragment;
+import com.mybringback.thebasics.trade.graphsFragments.ThreeMonthsFragment;
+import com.mybringback.thebasics.trade.graphsFragments.WeekFragment;
+import com.mybringback.thebasics.trade.graphsFragments.YearFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StocksActivity extends AppCompatActivity {
 
-    TextView open, close, low, high, change, changeProc;
+    TextView currentValue, open, close, low, high, change, changeProc;
     float floatOpenTday;
     float floatOpenYday;
     float floatChange;
+    int index;
     String Change, ChangeProc;
+    TextView name;
     float floatChangeProc;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public DataSave dataSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stocks);
+
+        Dataset dataSet = getIntent().getParcelableExtra(
+                Dataset.class.getCanonicalName());
 
         open = (TextView)findViewById(R.id.open);
         close = (TextView) findViewById(R.id.close);
@@ -43,6 +51,7 @@ public class StocksActivity extends AppCompatActivity {
         high = (TextView)findViewById(R.id.high);
         change = (TextView) findViewById(R.id.change);
         changeProc = (TextView) findViewById(R.id.changeProc);
+        name = (TextView) findViewById(R.id.name);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -59,8 +68,14 @@ public class StocksActivity extends AppCompatActivity {
         floatChangeProc =  (floatChange/floatOpenYday)*100;
         ChangeProc = String.format("%.2f", floatChangeProc);
 
-
-
+        try {
+            int index = dataSet.getName().indexOf(')');
+            name.setText(dataSet.getName().substring(0, index + 1));
+        } catch (NullPointerException e ) {
+            /*int index1 = MainActivity.dataSave.getName().indexOf(')');
+            name.setText(MainActivity.dataSave.getName().substring(0, index1 + 1));*/
+            name.setText(dataSet.getName());
+        }
         open.setText("Open: " + MainActivity.result.getData().get(0).get(1));
         close.setText("Close: " + MainActivity.result.getData().get(0).get(4));
         high.setText("High: " + MainActivity.result.getData().get(0).get(2));

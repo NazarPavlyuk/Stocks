@@ -1,8 +1,11 @@
-package com.mybringback.thebasics.trade.fragments;
+package com.mybringback.thebasics.trade.graphsFragments;
 
-
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+/**
+ * Created by ALLO on 03.08.2016.
+ */
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +33,13 @@ import lecho.lib.hellocharts.view.LineChartView;
 /**
  * Created by ALLO on 03.08.2016.
  */
-public class WeekFragment extends Fragment {
+public class ThreeDaysFragment extends Fragment {
 
     private LineChartView chart;
     private LineChartData data;
     private int numberOfLines = 1;
     private int maxNumberOfLines = 4;
-    private int numberOfPoints = 7;
+    private int numberOfPoints = 3;
 
     float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints];
 
@@ -53,11 +56,6 @@ public class WeekFragment extends Fragment {
     private float currentValue;
     private List comparedResults = new ArrayList();
 
-    public WeekFragment() {
-        // Required empty public constructor
-    }
-
-
     public float getCurrentValue() {
         return currentValue;
     }
@@ -66,25 +64,29 @@ public class WeekFragment extends Fragment {
         this.currentValue = currentValue;
     }
 
+    public ThreeDaysFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         for(int i=0;i<numberOfPoints; i++){
             comparedResults.add(Float.parseFloat(MainActivity.result.getData().get(i).get(1)));
         }
         Collections.sort(comparedResults, Collections.reverseOrder());
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_week, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_three_days, container, false);
 
         setHasOptionsMenu(true);
 
-        chart = (LineChartView) rootView.findViewById(R.id.chart_week);
+        chart = (LineChartView) rootView.findViewById(R.id.chart_three_days);
         chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateValues();
@@ -132,8 +134,10 @@ public class WeekFragment extends Fragment {
     private void resetViewport() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-10;
-        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+10;
+        /*v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-10;
+        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+10;*/
+        v.bottom = (float) comparedResults.get(numberOfPoints-1)-10;
+        v.top = (float) comparedResults.get(0) +10;
         v.left = 0;
         v.right = numberOfPoints - 1;
         chart.setMaximumViewport(v);
@@ -359,4 +363,3 @@ public class WeekFragment extends Fragment {
 
     }
 }
-

@@ -1,4 +1,4 @@
-package com.mybringback.thebasics.trade.adapter;
+package com.mybringback.thebasics.trade.resources.adapter;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mybringback.thebasics.trade.R;
 import com.mybringback.thebasics.trade.JSONmodel.Dataset;
+import com.mybringback.thebasics.trade.R;
+import com.mybringback.thebasics.trade.resources.JSONmodel.Dataset1;
 
 import java.util.List;
 
 /**
- * Created by ALLO on 23.07.2016.
+ * Created by ALLO on 19.09.2016.
  */
-public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHolder> {
+public class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapter.MyViewHolder> {
 
-    private List<Dataset> stocksDataList;
+    private List<Dataset1> stocksDataList;
 
     float floatChange;
     String Change, ChangeProc;
@@ -29,27 +30,24 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView stock_symbol, current_date, current_value, current_absolute_change, current_relative_change, stocks_company_name;
+        public TextView resource_symbol, current_date, current_value, current_absolute_change, current_relative_change;
         public RelativeLayout relativeLayout;
-        public FloatingActionButton fabClear;
 
         public MyViewHolder(View view) {
             super(view);
-            stock_symbol = (TextView) view.findViewById(R.id.stocks_symbol);
+            resource_symbol = (TextView) view.findViewById(R.id.stocks_symbol);
             current_date = (TextView) view.findViewById(R.id.current_date);
             current_value = (TextView) view.findViewById(R.id.current_value);
-            /*stocks_company_name = (TextView) view.findViewById(R.id.stocks_company_name);*/
 
             current_absolute_change = (TextView) view.findViewById(R.id.current_absolute_change);
             current_relative_change = (TextView) view.findViewById(R.id.current_relative_change);
 
             relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
 
-            /*fabClear = (FloatingActionButton) view.findViewById(R.id.fab_clear);*/
         }
     }
 
-    public StocksAdapter(Context context,List<Dataset> stocksDataList) {
+    public ResourceAdapter(Context context,List<Dataset1> stocksDataList) {
         this.context=context;
         this.stocksDataList = stocksDataList;
     }
@@ -65,24 +63,23 @@ public class StocksAdapter extends RecyclerView.Adapter<StocksAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        Dataset stocks = stocksDataList.get(position);
-        holder.stock_symbol.setText(stocks.getDataset_code());
-        /*holder.stocks_company_name.setText(stocks.getName());*/
-        holder.current_date.setText(stocks.getData().get(0).get(0));
-        holder.current_value.setText(stocks.getData().get(0).get(1));
-        if (Float.parseFloat(stocks.getData().get(0).get(1))
-                < Float.parseFloat(stocks.getData().get(1).get(1))) {
+        Dataset1 resources = stocksDataList.get(position);
+        holder.resource_symbol.setText(resources.getDataset_code());
+        holder.current_date.setText(resources.getData().get(0).get(0));
+        holder.current_value.setText(resources.getData().get(0).get(1));
+        if (Float.parseFloat(resources.getData().get(0).get(1))
+                < Float.parseFloat(resources.getData().get(1).get(1))) {
             holder.relativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorChangeNegative));
-        } else if (Float.parseFloat(stocks.getData().get(0).get(1))
-                > Float.parseFloat(stocks.getData().get(1).get(1))) {
+        } else if (Float.parseFloat(resources.getData().get(0).get(1))
+                > Float.parseFloat(resources.getData().get(1).get(1))) {
             holder.relativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorChangePositive));
-        } else if (Float.parseFloat(stocks.getData().get(0).get(1))
-                == Float.parseFloat(stocks.getData().get(1).get(1))) {
+        } else if (Float.parseFloat(resources.getData().get(0).get(1))
+                == Float.parseFloat(resources.getData().get(1).get(1))) {
             holder.relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoChange));
         }
-        floatChange = Float.parseFloat(stocks.getData().get(0).get(1))-Float.parseFloat(stocks.getData().get(1).get(1));
+        floatChange = Float.parseFloat(resources.getData().get(0).get(1))-Float.parseFloat(resources.getData().get(1).get(1));
         Change = String.format("%.2f", floatChange);
-        floatChangeProc =  (floatChange/Float.parseFloat(stocks.getData().get(1).get(1)))*100;
+        floatChangeProc =  (floatChange/Float.parseFloat(resources.getData().get(1).get(1)))*100;
         ChangeProc = String.format("%.2f", floatChangeProc);
         holder.current_absolute_change.setText(Change);
         holder.current_relative_change.setText(ChangeProc + "%");

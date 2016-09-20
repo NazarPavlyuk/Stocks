@@ -1,4 +1,5 @@
-package com.mybringback.thebasics.trade.fragments;
+package com.mybringback.thebasics.trade.graphsFragments;
+
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,6 @@ import java.util.List;
 import lecho.lib.hellocharts.animation.ChartAnimationListener;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.ChartData;
-import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -31,21 +30,20 @@ import lecho.lib.hellocharts.view.LineChartView;
 /**
  * Created by ALLO on 03.08.2016.
  */
-public class HalfYearFragment extends Fragment {
-
+public class WeekFragment extends Fragment {
 
     private LineChartView chart;
     private LineChartData data;
     private int numberOfLines = 1;
     private int maxNumberOfLines = 4;
-    private int numberOfPoints = 183;
+    private int numberOfPoints = 7;
 
     float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints];
 
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
     private boolean hasLines = true;
-    private boolean hasPoints = Boolean.parseBoolean(null);
+    private boolean hasPoints = true;
     private ValueShape shape = ValueShape.CIRCLE;
     private boolean isFilled = false;
     private boolean hasLabels = false;
@@ -55,7 +53,7 @@ public class HalfYearFragment extends Fragment {
     private float currentValue;
     private List comparedResults = new ArrayList();
 
-    public HalfYearFragment() {
+    public WeekFragment() {
         // Required empty public constructor
     }
 
@@ -77,15 +75,16 @@ public class HalfYearFragment extends Fragment {
         Collections.sort(comparedResults, Collections.reverseOrder());
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_half_year, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_week, container, false);
 
         setHasOptionsMenu(true);
 
-        chart = (LineChartView) rootView.findViewById(R.id.chart_half_year);
+        chart = (LineChartView) rootView.findViewById(R.id.chart_week);
         chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateValues();
@@ -133,10 +132,8 @@ public class HalfYearFragment extends Fragment {
     private void resetViewport() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        /*v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-75;
-        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+75;*/
-        v.bottom = (float) comparedResults.get(numberOfPoints-1)-25;
-        v.top = (float) comparedResults.get(0) +25;
+        v.bottom = Float.parseFloat(MainActivity.result.getData().get(0).get(1))-10;
+        v.top = Float.parseFloat(MainActivity.result.getData().get(numberOfPoints-1).get(1))+10;
         v.left = 0;
         v.right = numberOfPoints - 1;
         chart.setMaximumViewport(v);
@@ -362,5 +359,4 @@ public class HalfYearFragment extends Fragment {
 
     }
 }
-
 

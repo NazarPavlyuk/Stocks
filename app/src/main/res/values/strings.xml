@@ -30,4 +30,6 @@
     <string name="search_hint">Looking for stock symbols</string>
 
     <string name="facebook_app_id">557672607749235</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_stocks2">Stocks2Activity</string>
 </resources>

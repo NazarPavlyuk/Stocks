@@ -54,6 +54,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mybringback.thebasics.trade.MainActivity" />
         </activity>
+        <activity
+            android:name=".resources.Stocks2Activity"
+            android:label="@string/title_activity_stocks2"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -1,14 +1,14 @@
-package com.mybringback.thebasics.trade.JSONmodel;
-
+package com.mybringback.thebasics.trade.resources.JSONmodel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.List;
 
-import io.realm.RealmModel;
-
-public class Dataset implements Parcelable {
+/**
+ * Created by ALLO on 19.09.2016.
+ */
+public class Dataset1 implements Parcelable {
 
 
     private List<List<String>> data;
@@ -16,13 +16,13 @@ public class Dataset implements Parcelable {
     private String name;
 
 
-    public Dataset(List<List<String>> data, String dataset_code, String name) {
+    public Dataset1(List<List<String>> data, String dataset_code, String name) {
         this.data = data;
         this.dataset_code = dataset_code;
         this.name = name;
     }
 
-    protected Dataset(Parcel in) {
+    protected Dataset1(Parcel in) {
         dataset_code = in.readString();
         name = in.readString();
     }
@@ -38,15 +38,15 @@ public class Dataset implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Dataset> CREATOR = new Creator<Dataset>() {
+    public static final Creator<Dataset1> CREATOR = new Creator<Dataset1>() {
         @Override
-        public Dataset createFromParcel(Parcel in) {
-            return new Dataset(in);
+        public Dataset1 createFromParcel(Parcel in) {
+            return new Dataset1(in);
         }
 
         @Override
-        public Dataset[] newArray(int size) {
-            return new Dataset[size];
+        public Dataset1[] newArray(int size) {
+            return new Dataset1[size];
         }
     };
 
@@ -74,6 +74,3 @@ public class Dataset implements Parcelable {
         this.name = name;
     }
 }
-
-
-

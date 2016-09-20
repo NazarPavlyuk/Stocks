@@ -4,11 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mybringback.thebasics.trade.StocksActivity">
-    <!--android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mybringback.thebasics.trade.StocksActivity"-->
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -18,22 +13,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/currentValue"
+            android:id="@+id/name"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:text=""
             android:textStyle="bold"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:gravity="center" />
+        <!--android:text="New Text"-->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/high"
-            android:layout_below="@+id/currentValue"
+            android:layout_below="@+id/name"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:text="High:" />
@@ -43,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Open:"
             android:id="@+id/open"
-            android:layout_below="@+id/currentValue"
+            android:layout_below="@+id/name"
             android:layout_centerHorizontal="true" />
 
         <TextView
@@ -70,7 +66,7 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/change"
-            android:layout_below="@+id/currentValue"
+            android:layout_below="@+id/name"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
@@ -104,7 +100,7 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:theme="@style/AppTheme.PopupOverlay"
             android:layout_alignBottom="@+id/view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">

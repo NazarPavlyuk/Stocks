@@ -57,9 +57,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     SharedPreferences sPref;
 
-    final String SAVED_PASSWORD = "saved_password";
-    final String SAVED_EMAIL="saved_email";
-
     private EditText mEmailField;
     private EditText mPasswordField;
 
@@ -293,8 +290,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 });
     }
 
-
-
     public void createAccount(String email, String password){
         Log.d(TAG, "createAccount"+email);
         if(!validateForm()){
@@ -342,11 +337,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         });
     }
 
-  /* *//**//* private void signOut() {
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-    }*//**//**/
-
     private boolean validateForm() {
         boolean valid = true;
 
@@ -384,26 +374,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     protected void onDestroy(){
         super.onDestroy();
     }
-
-/*
-    *//**//*private void updateUI(FirebaseUser user) {
-        hideProgressDialog();
-        if (user != null) {
-            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-        }
-    }*//**//**/
 
     @Override
     public void onClick(View v) {

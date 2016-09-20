@@ -12,12 +12,14 @@ public class DataSave extends RealmObject implements RealmModel {
 
     private String data;
     private String dataset_code;
+    private String name;
 
     public DataSave(){}
 
-    public DataSave(String dataset_code, String data) {
+    public DataSave(String dataset_code, String data, String name) {
         this.dataset_code = dataset_code;
         this.data = data;
+        this.name = name;
     }
 
     public String getData() {
@@ -36,5 +38,12 @@ public class DataSave extends RealmObject implements RealmModel {
         this.dataset_code = dataset_code;
         return null;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

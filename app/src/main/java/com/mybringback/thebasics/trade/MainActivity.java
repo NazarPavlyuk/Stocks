@@ -54,9 +54,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_EXAMPLE = 0;
     private FirebaseAuth mAuth;
     private List<Dataset> stocksDataListMain = new ArrayList<>();
-    /*private RealmList<DataSavior> stocksDataListBase = new RealmList<>();*/
     public static Dataset result;
-    public static Dataset results;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
     private Realm realm;
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 secondlyAddedElements.add(firstlyAddedElements);
             }
-            stocksDataListMain.add(new Dataset(secondlyAddedElements, element.getDataset_code()));
+            stocksDataListMain.add(new Dataset(secondlyAddedElements, element.getDataset_code(), element.getName()));
         }
 
         /*searchItem.setVisible(false);
@@ -165,7 +163,9 @@ public class MainActivity extends AppCompatActivity
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                         result = stocksDataListMain.get(position);
-                        startActivity(new Intent(MainActivity.this, StocksActivity.class));
+                        Intent intent = new Intent(MainActivity.this, StocksActivity.class);
+                        intent.putExtra(Dataset.class.getCanonicalName(), result);
+                        startActivity(intent);
                         finish();
                     }
                     @Override
