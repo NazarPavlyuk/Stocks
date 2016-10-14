@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mybringback.thebasics.trade" >
+    package="com.mybringback.thebasics.trade">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_stocks"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -22,7 +22,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".login.LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,31 +33,16 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".search.SearchActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-
-            <meta-dataModel
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mybringback.thebasics.trade.MainActivity" />
-        </activity>
-        <activity android:name=".StocksActivity" >
+        <activity android:name=".graphs.StocksGraphActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mybringback.thebasics.trade.MainActivity" />
         </activity>
         <activity
-            android:name=".resources.Stocks2Activity"
+            android:name=".graphs.ResourcesGraphActivity"
             android:label="@string/title_activity_stocks2"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CurrencyListActivity" />
     </application>
 
 </manifest>

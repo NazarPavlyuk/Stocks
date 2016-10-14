@@ -4,32 +4,32 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_stocks"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_stocks_1"
             android:title="Stocks" />
         <item
             android:id="@+id/nav_resources"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_oil"
             android:title="Resources" />
         <item
             android:id="@+id/nav_currencies"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_dollar"
             android:title="Currencies" />
         <item
             android:id="@+id/nav_currencies_calculator"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_calculator"
             android:title="Currencies Calculator" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Options">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:icon="@drawable/ic_filter"
+                android:title="Filter" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:icon="@drawable/ic_logout"
+                android:title="Log Out" />
         </menu>
     </item>
 

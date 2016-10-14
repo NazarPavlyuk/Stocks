@@ -1,7 +1,6 @@
-package com.mybringback.thebasics.trade.MainActivityFragments;
+package com.mybringback.thebasics.trade.mainActivityFragments;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +27,7 @@ import com.mybringback.thebasics.trade.JSONmodel.Main;
 import com.mybringback.thebasics.trade.MainActivity;
 import com.mybringback.thebasics.trade.R;
 import com.mybringback.thebasics.trade.RealmModel.DataSave;
-import com.mybringback.thebasics.trade.StocksActivity;
+import com.mybringback.thebasics.trade.graphs.StocksGraphActivity;
 import com.mybringback.thebasics.trade.adapter.RecyclerItemClickListener;
 import com.mybringback.thebasics.trade.adapter.StocksAdapter;
 
@@ -50,20 +48,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class StocksFragment extends Fragment {
 
-    /*private List<Dataset> stocksDataListMain = new ArrayList<>();
+    private List<Dataset> stocksDataListMain = new ArrayList<>();
     public static Dataset result;
     private RecyclerView recyclerView;
     private StocksAdapter mAdapter;
     Context context;
     Realm realm;
     ProgressDialog dialog;
-    private SearchView searchView;
-    private MenuItem searchItem;
+    MenuItem item;
+    SearchView sv;
+    Menu menu;
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -93,12 +94,15 @@ public class StocksFragment extends Fragment {
             stocksDataListMain.add(new Dataset(secondlyAddedElements, element.getDataset_code(), element.getName()));
         }
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchItem.setVisible(true);
-                searchView.setVisibility(View.VISIBLE);
+                /*MenuItem item = menu.findItem(R.id.action_search);
+                item.setVisible(true);
+                final SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+                sv.setVisibility(View.VISIBLE);*/
             }
         });
 
@@ -144,7 +148,7 @@ public class StocksFragment extends Fragment {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                         result = stocksDataListMain.get(position);
-                        Intent intent = new Intent(getActivity(), StocksActivity.class);
+                        Intent intent = new Intent(getActivity(), StocksGraphActivity.class);
                         intent.putExtra(Dataset.class.getCanonicalName(), result);
                         startActivity(intent);
                     }
@@ -158,13 +162,15 @@ public class StocksFragment extends Fragment {
     return rootView;
     }
 
-    @Override
+   @Override
     public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.search, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
-        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        /*MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);*/
         MenuItemCompat.setActionView(item, sv);
+        /*item.setVisible(false);
+        sv.setVisibility(View.GONE);*/
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -180,7 +186,7 @@ public class StocksFragment extends Fragment {
                         .build();
                 DataService service = retrofit.create(DataService.class);
                 final Call<Main> call =
-                        service.searchItem(query, "365", "desc");
+                        service.searchItem(query,"RJXTgvbcSGNmDMk1Zv7A", "365", "desc");
 
                 call.enqueue(new Callback<Main>() {
                     @Override
@@ -223,7 +229,8 @@ public class StocksFragment extends Fragment {
                         Log.e("onFail", t.getMessage());
                     }
                 });
-                searchView.clearFocus();
+                sv.clearFocus();
+                item.collapseActionView();
                 return false;
             }
 
@@ -234,8 +241,8 @@ public class StocksFragment extends Fragment {
             }
         });
     }
-
-
-*/
-
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 }
